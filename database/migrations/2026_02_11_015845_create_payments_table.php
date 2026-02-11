@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('assistance_request_id')->unique()->constrained();
+            $table->decimal('monto', 10, 2);
+            $table->enum('metodo', ['efectivo', 'tarjeta', 'digital']);
+            $table->enum('estado_pago', ['pendiente', 'pagado', 'fallido', 'reembolsado']);
+            $table->string('provider_gateway', 50)->nullable();
+            $table->string('gateway_reference', 150)->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('payments');
+    }
+};
