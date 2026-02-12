@@ -6,26 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('service_areas', function (Blueprint $table) {
+        Schema::create('message_templates', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100);
-            $table->string('estado', 100)->nullable();
-            $table->string('pais', 100)->default('México');
+
+            $table->string('titulo', 100);
+            $table->text('contenido');
+
+            $table->enum('rol_destino', [
+                'conductor',
+                'proveedor',
+                'admin',
+                'operador'
+            ]);
+
             $table->boolean('activo')->default(true);
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('service_areas');
+        Schema::dropIfExists('message_templates');
     }
 };
