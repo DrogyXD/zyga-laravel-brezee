@@ -4,24 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vehicle extends Model
+class UserConsent extends Model
 {
     protected $fillable = [
         'user_id',
         'tipo',
-        'marca',
-        'modelo',
-        'color',
-        'placas',
+        'version',
+        'accepted_at',
+        'ip',
+        'user_agent',
+    ];
+
+    protected $casts = [
+        'accepted_at' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function assistanceRequests()
-    {
-        return $this->hasMany(AssistanceRequest::class);
     }
 }
