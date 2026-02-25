@@ -4,13 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attachment extends Model
+class Message extends Model
 {
     protected $fillable = [
         'assistance_request_id',
-        'uploaded_by',
-        'tipo',
-        'file_url',
+        'sender_id',
+        'contenido',
+        'sent_at',
+    ];
+
+    protected $casts = [
+        'sent_at' => 'datetime',
     ];
 
     public function assistanceRequest()
@@ -18,8 +22,8 @@ class Attachment extends Model
         return $this->belongsTo(AssistanceRequest::class);
     }
 
-    public function uploader()
+    public function sender()
     {
-        return $this->belongsTo(User::class, 'uploaded_by');
+        return $this->belongsTo(User::class, 'sender_id');
     }
 }

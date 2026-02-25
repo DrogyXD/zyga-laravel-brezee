@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Attachment extends Model
+class Rating extends Model
 {
     protected $fillable = [
         'assistance_request_id',
-        'uploaded_by',
-        'tipo',
-        'file_url',
+        'user_id',
+        'score',
+        'comentario',
     ];
 
     public function assistanceRequest()
@@ -18,8 +18,8 @@ class Attachment extends Model
         return $this->belongsTo(AssistanceRequest::class);
     }
 
-    public function uploader()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'uploaded_by');
+        return $this->belongsTo(User::class);
     }
 }
