@@ -1,28 +1,25 @@
 <?php
 
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\AssistanceRequestController;
 
 Route::prefix('v1')->group(function () {
 
-    // Públicas
-    Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
-    Route::post('/register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+    // Auth
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
 
-    // Protegidas
+    // Público
+    Route::get('/services', [ServiceController::class, 'index']);
+
+    // Protegido
     Route::middleware('auth:sanctum')->group(function () {
-
-        Route::get('/me', function (Request $request) {
-            return response()->json($request->user());
-        });
-
-        Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
-
-        Route::post(
-            '/assistance-requests',
-            [\App\Http\Controllers\Api\AssistanceRequestController::class, 'store']
-        );
-
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/assistance-requests', [AssistanceRequestController::class, 'store']);
     });
 
 });

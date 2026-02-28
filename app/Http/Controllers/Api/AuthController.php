@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -26,11 +26,15 @@ class AuthController extends Controller
             'estatus' => 'activo',
         ]);
 
-        $token = $user->createToken('mobile-token')->plainTextToken;
+        $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
-            'token' => $token,
+            'success' => true,
+            'message' => 'Usuario registrado correctamente',
+            'data' => [
+                'user' => $user,
+                'token' => $token
+            ]
         ], 201);
     }
 
@@ -38,22 +42,34 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required'
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Credenciales incorrectas.'],
+                'email' => ['Las credenciales son incorrectas.'],
             ]);
         }
 
-        $token = $user->createToken('mobile-token')->plainTextToken;
+        $token = $user->createToken('api_token')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
-            'token' => $token,
+            'success' => true,
+            'message' => 'Login exitoso',
+            'data' => [
+                'user' => $user,
+                'token' => $token
+            ]
+        ]);
+    }
+
+    public function me(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => $request->user()
         ]);
     }
 
@@ -62,7 +78,8 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Sesión cerrada correctamente.'
+            'success' => true,
+            'message' => 'Sesión cerrada correctamente'
         ]);
     }
 }
